@@ -17,6 +17,8 @@ M_data = read.csv("activity.csv", colClasses = c("numeric", "Date", "numeric"))
 #                         paste(sprintf("%02d",floor(interval/60)),sprintf("%02d",interval%%60),sep = ":"))
 ```
 
+**Note:** I do not understand what the "interval" variable is. 
+
 
 ## What is mean total number of steps taken per day?
 
@@ -63,8 +65,8 @@ mean_steps_per_day = mean(by_date$steps, na.rm = TRUE)
 median_steps_per_day = median(by_date$steps, na.rm = TRUE)
 ```
 
-The mean number of steps per day is 10766, 
-and the median number of steps per day is 10765.
+**The mean number of steps per day is 10766,
+and the median number of steps per day is 10765.**
 
 ## What is the average daily activity pattern?
 
@@ -83,21 +85,32 @@ plot(x = by_time$interval, y = by_time$steps,
      xlab = "Interval",
      ylab = "Number of steps",
      main = "Average steps at each interval")
+
+max_steps_interval = by_time[which.max(by_time$steps),]$interval
+
+abline( v = max_steps_interval, col = "blue")
 ```
 
 ![](PA1_template_files/figure-html/Average_daily_activity-1.png)<!-- -->
+
+As shown in the plot, **the interval with highest average step count is 835**.
 
 ## Imputing missing values
 
 Let us now process the missing values. 
 Since the only measured quantity is the number of steps, 
 this is the only column where missing values are found. 
-On the other hand, looking at the plot of mean steps at each hour 
+In the provided dataset **there are 2304 missing values**. 
+
+Looking at the plot of mean steps at each hour 
 seams sensible to use this data to fill the missing values, 
-as there is a lot of variability between some times and others.
+as there is a lot of variability between some times and others. 
+Hence this is the strategy we follow:
 
 
 ```r
+N_missing = sum(is.na(M_data$steps))
+
 M_data_f = M_data # M_data, filled
 
 for (i in seq_along(M_data_f$steps)){
@@ -109,7 +122,7 @@ for (i in seq_along(M_data_f$steps)){
 }
 ```
 
-Is there any missing value left? FALSE.
+<!-- Is there any missing value left? FALSE. -->
 
 Now we redo the histogram with the imputed values: 
 

@@ -16,6 +16,8 @@ M_data = read.csv("activity.csv", colClasses = c("numeric", "Date", "numeric"))
 #                         paste(sprintf("%02d",floor(interval/60)),sprintf("%02d",interval%%60),sep = ":"))
 ```
 
+**Note:** I do not understand what the "interval" variable is. 
+
 
 ## What is mean total number of steps taken per day?
 
@@ -29,8 +31,8 @@ mean_steps_per_day = mean(by_date$steps, na.rm = TRUE)
 median_steps_per_day = median(by_date$steps, na.rm = TRUE)
 ```
 
-The mean number of steps per day is `r format(mean_steps_per_day, digits = 5)`, 
-and the median number of steps per day is `r format(median_steps_per_day, digits = 5)`.
+**The mean number of steps per day is `r format(mean_steps_per_day, digits = 5)`,
+and the median number of steps per day is `r format(median_steps_per_day, digits = 5)`.**
 
 ## What is the average daily activity pattern?
 
@@ -41,18 +43,29 @@ plot(x = by_time$interval, y = by_time$steps,
      xlab = "Interval",
      ylab = "Number of steps",
      main = "Average steps at each interval")
+
+max_steps_interval = by_time[which.max(by_time$steps),]$interval
+
+abline( v = max_steps_interval, col = "blue")
 ```
+
+As shown in the plot, **the interval with highest average step count is `r max_steps_interval`**.
 
 ## Imputing missing values
 
 Let us now process the missing values. 
 Since the only measured quantity is the number of steps, 
 this is the only column where missing values are found. 
-On the other hand, looking at the plot of mean steps at each hour 
+In the provided dataset **there are `r sum(is.na(M_data$steps))` missing values**. 
+
+Looking at the plot of mean steps at each hour 
 seams sensible to use this data to fill the missing values, 
-as there is a lot of variability between some times and others.
+as there is a lot of variability between some times and others. 
+Hence this is the strategy we follow:
 
 ```{r Filling_missing_values}
+
+N_missing = sum(is.na(M_data$steps))
 
 M_data_f = M_data # M_data, filled
 
@@ -65,7 +78,7 @@ for (i in seq_along(M_data_f$steps)){
 }
 ```
 
-Is there any missing value left? `r any(is.na(M_data_f$steps))`.
+<!-- Is there any missing value left? `r any(is.na(M_data_f$steps))`. -->
 
 Now we redo the histogram with the imputed values: 
 
@@ -79,8 +92,8 @@ mean_steps_per_day_f = mean(by_date$steps, na.rm = TRUE)
 median_steps_per_day_f = median(by_date$steps, na.rm = TRUE)
 ```
 
-With the imputed values the mean number of steps per day is `r format(mean_steps_per_day_f, digits = 5)`, 
-and the median number of steps per day is `r format(median_steps_per_day_f, digits = 5)`. 
+**With the imputed values the mean number of steps per day is `r format(mean_steps_per_day_f, digits = 5)`, 
+and the median number of steps per day is `r format(median_steps_per_day_f, digits = 5)`.**
 That is, they are not affected at all. 
 Furthermore, we can see in the histogram above that all the days with imputed values are in the central bar. 
 
