@@ -56,7 +56,7 @@ hist(by_date$steps,
      main = "Histogram of steps in a day")
 ```
 
-![](PA1_template_files/figure-html/Histogram of steps a day-1.png)<!-- -->
+![](PA1_template_files/figure-html/Histogram_of_steps_a_day-1.png)<!-- -->
 
 ```r
 mean_steps_per_day = mean(by_date$steps, na.rm = TRUE)
@@ -85,7 +85,7 @@ plot(x = by_time$interval, y = by_time$steps,
      main = "Average steps at each interval")
 ```
 
-![](PA1_template_files/figure-html/Average daily activity-1.png)<!-- -->
+![](PA1_template_files/figure-html/Average_daily_activity-1.png)<!-- -->
 
 ## Imputing missing values
 
@@ -127,7 +127,7 @@ by_date_f = group_by(M_data_f, date) %>% summarise(steps = sum(steps), Imputed =
 ggplot(by_date_f, aes(steps, fill = factor(Imputed, levels = c(TRUE, FALSE)))) + geom_histogram(bins = 5) + labs(fill="Imputed", title = "Histogram of steps in a day") + xlab("Steps in a day") + ylab("Count") + theme(plot.title = element_text(hjust = 0.5))
 ```
 
-![](PA1_template_files/figure-html/Histogram with imputed values-1.png)<!-- -->
+![](PA1_template_files/figure-html/Histogram_with_imputed_values-1.png)<!-- -->
 
 ```r
 mean_steps_per_day_f = mean(by_date$steps, na.rm = TRUE)
@@ -157,4 +157,4 @@ by_time_f = group_by(M_data_f, interval, is_weekend) %>% summarise(steps = mean(
 ggplot(by_time_f, aes(x = interval, y = steps), type = "l") + geom_line() + facet_grid(rows = vars(is_weekend)) + labs(xlab = "Interval", ylab = "Steps", title = "Average number of steps by type of day") + theme(plot.title = element_text(hjust = 0.5))
 ```
 
-![](PA1_template_files/figure-html/Weekdays and weekends comparison-1.png)<!-- -->
+![](PA1_template_files/figure-html/Weekdays_and_weekends_comparison-1.png)<!-- -->
