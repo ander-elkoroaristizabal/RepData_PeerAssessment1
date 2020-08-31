@@ -51,29 +51,12 @@ by_date = group_by(M_data, date) %>% summarise(steps = sum(steps))
 ```
 
 ```r
-hist(by_date$steps, bins = 6,
+hist(by_date$steps,
      xlab = "Steps in a day", 
      main = "Histogram of steps in a day")
 ```
 
-```
-## Warning in plot.window(xlim, ylim, "", ...): "bins" is not a graphical parameter
-```
-
-```
-## Warning in title(main = main, sub = sub, xlab = xlab, ylab = ylab, ...): "bins"
-## is not a graphical parameter
-```
-
-```
-## Warning in axis(1, ...): "bins" is not a graphical parameter
-```
-
-```
-## Warning in axis(2, ...): "bins" is not a graphical parameter
-```
-
-![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+![](PA1_template_files/figure-html/Histogram of steps a day-1.png)<!-- -->
 
 ```r
 mean_steps_per_day = mean(by_date$steps, na.rm = TRUE)
@@ -102,7 +85,7 @@ plot(x = by_time$interval, y = by_time$steps,
      main = "Average steps at each interval")
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+![](PA1_template_files/figure-html/Average daily activity-1.png)<!-- -->
 
 ## Imputing missing values
 
@@ -141,10 +124,10 @@ by_date_f = group_by(M_data_f, date) %>% summarise(steps = sum(steps), Imputed =
 ```
 
 ```r
-ggplot(by_date_f, aes(steps, fill = factor(Imputed, levels = c(TRUE, FALSE)))) + geom_histogram(bins = 6) + labs(fill="Imputed", xlab = "Steps in a day", ylab = "Count", title = "Histogram of steps in a day") + theme(plot.title = element_text(hjust = 0.5))
+ggplot(by_date_f, aes(steps, fill = factor(Imputed, levels = c(TRUE, FALSE)))) + geom_histogram(bins = 5) + labs(fill="Imputed", title = "Histogram of steps in a day") + xlab("Steps in a day") + ylab("Count") + theme(plot.title = element_text(hjust = 0.5))
 ```
 
-![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+![](PA1_template_files/figure-html/Histogram with imputed values-1.png)<!-- -->
 
 ```r
 mean_steps_per_day_f = mean(by_date$steps, na.rm = TRUE)

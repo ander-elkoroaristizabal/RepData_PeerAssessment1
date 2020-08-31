@@ -10,7 +10,7 @@ First, let us load it:
 
 ## Loading and preprocessing the data
 
-```{r Reading data, cache=TRUE}
+```{r Reading data}
 M_data = read.csv("activity.csv", colClasses = c("numeric", "Date", "numeric"))
 # M_data$start_time= with(M_data,
 #                         paste(sprintf("%02d",floor(interval/60)),sprintf("%02d",interval%%60),sep = ":"))
