@@ -10,7 +10,7 @@ First, let us load it:
 
 ## Loading and preprocessing the data
 
-```{r, cache=TRUE}
+```{r Reading data, cache=TRUE}
 M_data = read.csv("activity.csv", colClasses = c("numeric", "Date", "numeric"))
 # M_data$start_time= with(M_data,
 #                         paste(sprintf("%02d",floor(interval/60)),sprintf("%02d",interval%%60),sep = ":"))
@@ -19,7 +19,7 @@ M_data = read.csv("activity.csv", colClasses = c("numeric", "Date", "numeric"))
 
 ## What is mean total number of steps taken per day?
 
-```{r}
+```{r Histogram of steps a day}
 library(dplyr)
 by_date = group_by(M_data, date) %>% summarise(steps = sum(steps))
 hist(by_date$steps,
@@ -34,7 +34,7 @@ and the median number of steps per day is `r format(median_steps_per_day, digits
 
 ## What is the average daily activity pattern?
 
-```{r}
+```{r Average daily activity}
 by_time = group_by(M_data, interval) %>% summarise(steps = mean(steps, na.rm = TRUE))
 plot(x = by_time$interval, y = by_time$steps, 
      type = "l",
@@ -52,7 +52,7 @@ On the other hand, looking at the plot of mean steps at each hour
 seams sensible to use this data to fill the missing values, 
 as there is a lot of variability between some times and others.
 
-```{r}
+```{r Filling missing values}
 
 M_data_f = M_data # M_data, filled
 
