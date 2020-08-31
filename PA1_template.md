@@ -10,7 +10,8 @@ First, let us load it:
 
 ## Loading and preprocessing the data
 
-```{r, cache=TRUE}
+
+```r
 M_data = read.csv("activity.csv", colClasses = c("numeric", "Date", "numeric"))
 # M_data$start_time= with(M_data,
 #                         paste(sprintf("%02d",floor(interval/60)),sprintf("%02d",interval%%60),sep = ":"))
@@ -19,29 +20,89 @@ M_data = read.csv("activity.csv", colClasses = c("numeric", "Date", "numeric"))
 
 ## What is mean total number of steps taken per day?
 
-```{r}
+
+```r
 library(dplyr)
+```
+
+```
+## 
+## Attaching package: 'dplyr'
+```
+
+```
+## The following objects are masked from 'package:stats':
+## 
+##     filter, lag
+```
+
+```
+## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union
+```
+
+```r
 by_date = group_by(M_data, date) %>% summarise(steps = sum(steps))
-hist(by_date$steps,
+```
+
+```
+## `summarise()` ungrouping output (override with `.groups` argument)
+```
+
+```r
+hist(by_date$steps, bins = 6,
      xlab = "Steps in a day", 
      main = "Histogram of steps in a day")
+```
+
+```
+## Warning in plot.window(xlim, ylim, "", ...): "bins" is not a graphical parameter
+```
+
+```
+## Warning in title(main = main, sub = sub, xlab = xlab, ylab = ylab, ...): "bins"
+## is not a graphical parameter
+```
+
+```
+## Warning in axis(1, ...): "bins" is not a graphical parameter
+```
+
+```
+## Warning in axis(2, ...): "bins" is not a graphical parameter
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+
+```r
 mean_steps_per_day = mean(by_date$steps, na.rm = TRUE)
 median_steps_per_day = median(by_date$steps, na.rm = TRUE)
 ```
 
-The mean number of steps per day is `r format(mean_steps_per_day, digits = 5)`, 
-and the median number of steps per day is `r format(median_steps_per_day, digits = 5)`.
+The mean number of steps per day is 10766, 
+and the median number of steps per day is 10765.
 
 ## What is the average daily activity pattern?
 
-```{r}
+
+```r
 by_time = group_by(M_data, interval) %>% summarise(steps = mean(steps, na.rm = TRUE))
+```
+
+```
+## `summarise()` ungrouping output (override with `.groups` argument)
+```
+
+```r
 plot(x = by_time$interval, y = by_time$steps, 
      type = "l",
      xlab = "Interval",
      ylab = "Number of steps",
      main = "Average steps at each interval")
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
 
 ## Imputing missing values
 
@@ -52,8 +113,8 @@ On the other hand, looking at the plot of mean steps at each hour
 seams sensible to use this data to fill the missing values, 
 as there is a lot of variability between some times and others.
 
-```{r}
 
+```r
 M_data_f = M_data # M_data, filled
 
 for (i in seq_along(M_data_f$steps)){
@@ -65,33 +126,52 @@ for (i in seq_along(M_data_f$steps)){
 }
 ```
 
-Is there any missing value left? `r any(is.na(M_data_f$steps))`.
+Is there any missing value left? FALSE.
 
 Now we redo the histogram with the imputed values: 
 
-```{r Histogram with imputed values}
+
+```r
 library(ggplot2)
 by_date_f = group_by(M_data_f, date) %>% summarise(steps = sum(steps), Imputed = Imputed)
+```
 
-ggplot(by_date_f, aes(steps, fill = factor(Imputed, levels = c(TRUE, FALSE)))) + geom_histogram(bins = 5) + labs(fill="Imputed", title = "Histogram of steps in a day") + xlab("Steps in a day") + ylab("Count") + theme(plot.title = element_text(hjust = 0.5))
+```
+## `summarise()` regrouping output by 'date' (override with `.groups` argument)
+```
 
+```r
+ggplot(by_date_f, aes(steps, fill = factor(Imputed, levels = c(TRUE, FALSE)))) + geom_histogram(bins = 6) + labs(fill="Imputed", xlab = "Steps in a day", ylab = "Count", title = "Histogram of steps in a day") + theme(plot.title = element_text(hjust = 0.5))
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png)<!-- -->
+
+```r
 mean_steps_per_day_f = mean(by_date$steps, na.rm = TRUE)
 median_steps_per_day_f = median(by_date$steps, na.rm = TRUE)
 ```
 
-With the imputed values the mean number of steps per day is `r format(mean_steps_per_day_f, digits = 5)`, 
-and the median number of steps per day is `r format(median_steps_per_day_f, digits = 5)`. 
+With the imputed values the mean number of steps per day is 10766, 
+and the median number of steps per day is 10765. 
 That is, they are not affected at all. 
 Furthermore, we can see in the histogram above that all the days with imputed values are in the central bar. 
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r Weekdays and weekends comparison}
 
+```r
 M_data_f["is_weekend"] = factor(weekdays(M_data_f$date) %in% c("Friday", "Saturday", "Sunday"), 
                                 labels = c("Weekdays", "Weekend"))
 
 by_time_f = group_by(M_data_f, interval, is_weekend) %>% summarise(steps = mean(steps, na.rm = TRUE))
+```
 
+```
+## `summarise()` regrouping output by 'interval' (override with `.groups` argument)
+```
+
+```r
 ggplot(by_time_f, aes(x = interval, y = steps), type = "l") + geom_line() + facet_grid(rows = vars(is_weekend)) + labs(xlab = "Interval", ylab = "Steps", title = "Average number of steps by type of day") + theme(plot.title = element_text(hjust = 0.5))
 ```
+
+![](PA1_template_files/figure-html/Weekdays and weekends comparison-1.png)<!-- -->
